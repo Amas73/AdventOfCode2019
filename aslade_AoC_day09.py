@@ -1,9 +1,9 @@
-fn = 'day07.txt'
+fn = 'day09.txt'
 
 init_int_code = list(map(int,[r for r in open(fn).readlines()][0].split(',')))
-#init_int_code = [3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0]
-#init_int_code = [3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0]
-#init_int_code = [3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0]
+init_int_code = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+#init_int_code = [1102,34915192,34915192,7,4,7,99,0]
+#init_int_code = [104,1125899906842624,99]
 #init_int_code = [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5]
 #init_int_code = [3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10]
 
@@ -14,10 +14,12 @@ def run_int_code(phase, in_signal, int_code, cp = 0):
         p1_mode = prog[-3:-2]
         p2_mode = prog[-4:-3]
         p3_mode = prog[-5:-4]
+        relative_base = 0
         #print (int_code)
         #print (str(cp) + ',' + str(op_code))
 
         if p1_mode == '1': val1 = int_code[cp+1]
+        if p1_mode == '2': val1 = int_code[cp+1] + relative_base
         else: val1 = int_code[int(int_code[cp+1])]
         
         if op_code in [1,2,3,7,8]:
@@ -54,6 +56,9 @@ def run_int_code(phase, in_signal, int_code, cp = 0):
                 ans = val1
                 out_signal = ans
                 return [out_signal, False, (int_code, out_signal, cp+2)]
+            if op_code == 9:
+                relative_base += val1
+                inc = 2
             else:
                 if p2_mode == '1': val2 = int_code[cp + 2]
                 else: val2 = int_code[int(int_code[cp + 2])]
